@@ -8,6 +8,21 @@ function Navigation(props) {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const submit = (e) => {
+        const formElem = document.getElementById("form");
+        e.preventDefault();
+
+        const formData = new FormData(formElem);
+        fetch("https://script.google.com/macros/s/AKfycbyVV0dSVeY382W4wr0KuAsNlmTTdAdmDQfmr5MjGO58B9ijXUKwZZeohM5Pc6IxZGsJ/exec", {
+            method: "POST",
+            body: JSON.stringify({
+                name: formData.get('Name'),
+                email: formData.get('Email'),
+                message: formData.get("Message")
+            }),
+        })
+    }
     return (
         <div>
             <div>
@@ -39,29 +54,29 @@ function Navigation(props) {
                     show={show} onHide={handleClose}><Modal.Header closeButton>
                         <Modal.Title>Sign Up</Modal.Title>
                     </Modal.Header><Modal.Body>
-                        <form className="form-group row" action="#" method="post">
+                        <form className="form-group row" id="form" method="POST" onSubmit={(e) => submit(e)}>
                             <div className="col">
-                                <label htmlFor="fullName" className="form-label">Fullname</label>
-                                <input typeof="text" name="fullName" className="form-control" required></input>
+                                <label htmlFor="Name" className="form-label">Fullname</label>
+                                <input typeof="text" id="Name" name="Name" className="form-control" required></input>
 
                                 <label htmlFor="password" className="form-label">Password</label>
                                 <input typeof="password" name="password" className="form-control" required></input>
                             </div>
                             <div className="col">
-                                <label htmlFor="email" className="form-label">E-mail</label>
-                                <input typeof="email" name="email" className="form-control" required></input>
+                                <label htmlFor="Email" className="form-label">E-mail</label>
+                                <input typeof="email" id="Email" name="Email" className="form-control" required></input>
 
-                                <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                                <input typeof="password" name="confirmPassword" className="form-control" required></input>
+                                <label htmlFor="Message" className="form-label">Your Message: </label>
+                                <textarea name="Message" rows={5} cols={10} id="Message" className="form-control" placeholder="Enter your message here ....." required />
                             </div>
                             <div className="row">
                                 <div className="col"></div>
                                 <div className="col">
-                                <button className="btn btn-primary mb-3 mt-3" onClick={handleClose}>Submit</button>
+                                    <button className="btn btn-primary mb-3 mt-3" onClick={handleClose}>Submit</button>
                                 </div>
                                 <div className="col"></div>
                             </div>
-                           <p>Already have an account? <span><a href="#">Sign In</a></span></p>
+                            <p>Already have an account? <span><a href="#">Sign In</a></span></p>
                         </form>
                     </Modal.Body>
                 </Modal>
