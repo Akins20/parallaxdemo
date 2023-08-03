@@ -9,20 +9,34 @@ function Navigation(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const submit = (e) => {
-        const formElem = document.getElementById("form");
-        e.preventDefault();
+    const [formData, setFormData] = useState({
+        Name: "",
+        Email: "",
+        Message: "",
+    });
 
-        const formData = new FormData(formElem);
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const formData = new FormData();
+        formData.append("Name", formData.Name);
+        formData.append("Email", formData.Email);
+        formData.append("Message", formData.Message);
+
         fetch("https://script.google.com/macros/s/AKfycbyVV0dSVeY382W4wr0KuAsNlmTTdAdmDQfmr5MjGO58B9ijXUKwZZeohM5Pc6IxZGsJ/exec", {
             method: "POST",
-            body: JSON.stringify({
-                name: formData.get('Name'),
-                email: formData.get('Email'),
-                message: formData.get("Message")
-            }),
-        })
-    }
+            body: formData
+        });
+        console.log("Form Data Sent Succesfully")
+    };
     return (
         <div>
             <div>
@@ -54,25 +68,25 @@ function Navigation(props) {
                     show={show} onHide={handleClose}><Modal.Header closeButton>
                         <Modal.Title>Sign Up</Modal.Title>
                     </Modal.Header><Modal.Body>
-                        <form className="form-group row" id="form" method="POST" onSubmit={(e) => submit(e)}>
+                        <form className="form-group row" id="form" method="POST" onSubmit={handleSubmit}>
                             <div className="col">
                                 <label htmlFor="Name" className="form-label">Fullname</label>
-                                <input typeof="text" id="Name" name="Name" className="form-control" required></input>
-
-                                <label htmlFor="password" className="form-label">Password</label>
-                                <input typeof="password" name="password" className="form-control" required></input>
+                                <input type="text" value={formData.Name}
+                                    onChange={handleChange} id="Name" name="Name" className="form-control" required></input>
                             </div>
                             <div className="col">
                                 <label htmlFor="Email" className="form-label">E-mail</label>
-                                <input typeof="email" id="Email" name="Email" className="form-control" required></input>
+                                <input type="email" value={formData.Email}
+                                    onChange={handleChange} id="Email" name="Email" className="form-control" required></input>
 
                                 <label htmlFor="Message" className="form-label">Your Message: </label>
-                                <textarea name="Message" rows={5} cols={10} id="Message" className="form-control" placeholder="Enter your message here ....." required />
+                                <textarea name="Message" value={formData.Message}
+                                    onChange={handleChange} rows={5} cols={10} id="Message" className="form-control" placeholder="Enter your message here ....." required />
                             </div>
                             <div className="row">
                                 <div className="col"></div>
                                 <div className="col">
-                                    <button className="btn btn-primary mb-3 mt-3" onClick={handleClose}>Submit</button>
+                                    <button type="submit" className="btn btn-primary mb-3 mt-3">Submit</button>
                                 </div>
                                 <div className="col"></div>
                             </div>
